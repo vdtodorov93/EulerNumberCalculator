@@ -10,9 +10,10 @@ public class EulerSumRunnable implements Runnable {
 	private int resultsNumber;
 	private FactorialCalculator calc;
 	private int floatPrecision;
+	private Boolean isQuiet;
 	
-	public EulerSumRunnable(int from, int to, int step, Apfloat[] results, int resultsNumber, FactorialCalculator calc, int floatPrecision) {
-		System.out.println(String.format("Thread #%s from %s to %s step %s", resultsNumber, from, to, step));
+	public EulerSumRunnable(int from, int to, int step, Apfloat[] results, int resultsNumber, FactorialCalculator calc, int floatPrecision, Boolean isQuiet) {
+		//System.out.println(String.format("Thread #%s from %s to %s step %s", resultsNumber, from, to, step));
 		this.from = from;
 		this.to = to;
 		this.step = step;
@@ -20,19 +21,19 @@ public class EulerSumRunnable implements Runnable {
 		this.resultsNumber = resultsNumber;
 		this.calc = calc;
 		this.floatPrecision = floatPrecision;
+		this.isQuiet = isQuiet;
 	}
 	
 	@Override
 	public void run() {
 		results[resultsNumber] = new Apfloat(0, floatPrecision);
-		//if(from != 0) return;
+		int chunk = to / 10;
 		for(int i = from; i < to; i += step) {
-			System.out.print(" " + i);
 			results[resultsNumber] = results[resultsNumber].add(new Apfloat(2 * i + 1, floatPrecision).divide(new Apfloat(calc.factorial(2 * i))));
-			//System.out.println("k = " + i);
+			if(i % chunk == 0 && i != 0 && !isQuiet) {
+				System.out.println(i / chunk + "0% complete");
+			}
 		}
-		System.out.println();
-		System.out.println(results[resultsNumber]);
 	}
 
 }

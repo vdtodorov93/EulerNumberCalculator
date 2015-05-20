@@ -5,7 +5,7 @@ public class ArgumentsParser {
 	private int threadsCount;
 	private String outputFile;
 	private Boolean isQuiet;
-	private final Integer floatPrecision = 10;
+	private final Integer floatPrecision = 1000;
 	
 	public ArgumentsParser(String[] args) {
 		parseArguments(args);
@@ -70,6 +70,6 @@ public class ArgumentsParser {
 	}
 	
 	public void print() {
-		System.out.println(String.format("Sequence size: %s Threads: %s Output file: %s Quiet mode: %s", sequenceSize, threadsCount, outputFile, isQuiet));
+		System.out.println(String.format("Sequence size: %s Threads: %s Output file: %s Quiet mode: %s Precision: %s", sequenceSize, threadsCount, outputFile, isQuiet, floatPrecision));
 	}
 }

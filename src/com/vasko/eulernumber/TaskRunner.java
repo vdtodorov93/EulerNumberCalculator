@@ -11,7 +11,11 @@ public class TaskRunner {
 
 	public static void main(String[] args) {
 		ArgumentsParser parser = new ArgumentsParser(args);
-		parser.print();
+		
+		if (!parser.getIsQuiet()) {
+			parser.printInfo();
+		}
+		
 		long startTime = System.currentTimeMillis();
 		int threadCount = parser.getThreadsCount();
 		int precision = parser.getFloatPrecision();
@@ -21,8 +25,9 @@ public class TaskRunner {
 		Thread threads[] = new Thread[threadCount];
 
 		for (int i = 0; i < threadCount; i++) {
-			EulerSumRunnable r = new EulerSumRunnable(i, parser.getSequenceSize(),
-					threadCount, results, i, calc, precision, parser.getIsQuiet());
+			EulerSumRunnable r = new EulerSumRunnable(i,
+					parser.getSequenceSize(), threadCount, results, i, calc,
+					precision, parser.getIsQuiet());
 			Thread t = new Thread(r);
 			threads[i] = t;
 			t.start();
@@ -41,7 +46,8 @@ public class TaskRunner {
 			System.out.println(sum);
 		}
 		try {
-			PrintWriter writer = new PrintWriter(parser.getOutputFile(), "UTF-8");
+			PrintWriter writer = new PrintWriter(parser.getOutputFile(),
+					"UTF-8");
 			writer.println(sum);
 			writer.close();
 		} catch (FileNotFoundException | UnsupportedEncodingException e) {

@@ -69,7 +69,7 @@ public class ArgumentsParser {
 		}
 	}
 	
-	public void print() {
+	public void printInfo() {
 		System.out.println(String.format("Sequence size: %s Threads: %s Output file: %s Quiet mode: %s Precision: %s", sequenceSize, threadsCount, outputFile, isQuiet, floatPrecision));
 	}
 }

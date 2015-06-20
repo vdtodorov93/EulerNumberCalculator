@@ -7,27 +7,32 @@ import java.io.UnsupportedEncodingException;
 import org.apfloat.Apfloat;
 
 public class TaskRunner {
-	private static FactorialCalculator calc;
+	//private static FactorialCalculator calc;
 
 	public static void main(String[] args) {
-		ArgumentsParser parser = new ArgumentsParser(args);
-		
+		ArgumentsParser parser = new ArgumentsParser(args);		
 		if (!parser.getIsQuiet()) {
 			parser.printInfo();
-		}
-		
+		}		
 		long startTime = System.currentTimeMillis();
 		int threadCount = parser.getThreadsCount();
-		int precision = parser.getFloatPrecision();
+		int precision = parser.getSequenceSize();
+		
 		Apfloat sum = new Apfloat(0, precision);
-		calc = new FactorialCalculator();
 		Apfloat[] results = new Apfloat[threadCount];
 		Thread threads[] = new Thread[threadCount];
-
+		int chunkSize = precision / threadCount;
+		Apfloat fact = new Apfloat(1);
+		int currentFactCalculated = 1;
+		
 		for (int i = 0; i < threadCount; i++) {
-			EulerSumRunnable r = new EulerSumRunnable(i,
-					parser.getSequenceSize(), threadCount, results, i, calc,
-					precision, parser.getIsQuiet());
+			int from = i * chunkSize;
+			int to = (i + 1) * chunkSize;
+			while(currentFactCalculated < from * 2) {
+				fact = fact.multiply(new Apfloat(currentFactCalculated));
+				currentFactCalculated++;
+			}
+			FastRunnable r = new FastRunnable(from, to, fact, results, i, parser.getFloatPrecision(), parser.getIsQuiet());
 			Thread t = new Thread(r);
 			threads[i] = t;
 			t.start();
